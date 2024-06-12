@@ -11,7 +11,7 @@ export interface NotificationItem {
 }
 
 // creating store
-const useNotificationStore  = defineStore('notificationStore', ()=>{
+export const useNotificationStore  = defineStore('notificationStore', ()=>{
 
     const toastAlertIsOpen = ref<boolean>(false);
     const activeNotification = ref<NotificationItem[]>([])
@@ -47,7 +47,7 @@ const useNotificationStore  = defineStore('notificationStore', ()=>{
     }
 
     const removeNotification =(id: string)=>{
-        const index = activeNotification .value.findIndex((notification =>notification.id = id))
+        const index = activeNotification.value.findIndex((notification =>notification.id = id))
         if(index){
             activeNotification.value[index].isShown =false;
             setTimeout(()=>{
