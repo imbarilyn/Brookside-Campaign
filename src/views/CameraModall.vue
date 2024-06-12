@@ -2,7 +2,7 @@
 import { ref, type Ref, watch } from 'vue'
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { X, Camera, SwitchCamera } from 'lucide-vue-next'
-import { useNotificationsStore } from '@/stores'
+import { useNotificationStore } from '@/stores'
 import type {CapturedImageItem} from "@/views/CapturePage.vue";
 
 interface CameraModalProps {
@@ -17,7 +17,7 @@ const emits = defineEmits<{
   (event: 'captureImage', capturedImageItem: CapturedImageItem): void
 }>()
 //
-const notificationsStore = useNotificationsStore()
+const notificationsStore = useNotificationStore()
 
 const videoStream: Ref<MediaStream | null> = ref(null)
 const cameraFeed: Ref<HTMLVideoElement | null> = ref(null)
