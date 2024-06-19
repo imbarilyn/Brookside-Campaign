@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import {useNotificationStore} from "@/stores";
 
 
-const useNotifcationStore = useNotificationStore()
+const notificationStore = useNotificationStore()
 
 interface NotificationItem {
   message:string;
