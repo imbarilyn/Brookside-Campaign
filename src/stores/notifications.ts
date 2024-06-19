@@ -34,34 +34,40 @@ export const useNotificationStore  = defineStore('notificationStore', ()=>{
 
     const addNotification =(message: string, type: NotificationItem['type'])=>{
         const id = uuidV4();
+        console.log(message)
+        console.log(type)
         notificationQueue.value.push(
             {
-                message:message,
-                type: type,
-                id: id,
+                message,
+                type,
+                id,
                 duration: 5000,
                 isShown:false
             }
         )
-
+        console.log(notificationQueue.value)
+        processNotificationQueue()
     }
 
     const removeNotification =(id: string)=>{
         const index = activeNotification.value.findIndex((notification =>notification.id = id))
-        if(index){
-            activeNotification.value[index].isShown =false;
+        if(index > -1){
+            activeNotification.value[index].isShown = false;
             setTimeout(()=>{
                 activeNotification.value.splice(index, 1)
             }, 400)
         }
+        console.log(activeNotification.value)
     }
 
     const processNotificationQueue =()=>{
+        console.log(getNotificationStackLength.value)
+
         if(getNotificationStackLength.value > 0 && getActiveNotificationStackLength.value < 3 ){
             const notification  = notificationQueue.value.shift() as NotificationItem;
             notification.isShown = true;
             activeNotification.value.push(notification);
-
+            console.log(activeNotification.value)
 
             setTimeout(()=>{
                 removeNotification(notification.id as string)
