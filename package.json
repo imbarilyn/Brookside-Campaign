@@ -38,6 +38,7 @@
     "daisyui": "^4.12.2",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.23.0",
+    "material-design-icons-iconfont": "^6.7.0",
     "npm-run-all2": "^6.1.2",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
