@@ -23,6 +23,25 @@ const customerDetails = reactive({
   email: '',
   phoneNo: ''
 })
+const takePhoto = ref(true)
+
+
+const toggleUsername = ref<boolean>(false)
+
+const usernameDetail = reactive({
+  social1: '',
+  social2: '',
+})
+
+
+watch(()=> usernameDetail.social1, (value)=>{
+  usernameDetail.social1 = value
+})
+
+watch(()=> usernameDetail.social2, (value)=>{
+  usernameDetail.social2 = value
+})
+
 
 const emailValidator = (value: string) => {
   if (!value) {
