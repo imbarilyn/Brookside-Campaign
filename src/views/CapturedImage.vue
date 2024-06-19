@@ -49,7 +49,7 @@ onMounted(() => {
 
 <template>
   <div
-      class="w-full h-auto rounded-md overflow-hidden relative mb-4 cursor-pointer active:scale-95 transition-transform duration-200 ease-in-out hover:shadow-xl active:shadow-none animate-scale-up-center"
+      class="h-56 w-80 rounded-md overflow-hidden relative pb-4 cursor-pointer active:scale-95 transition-transform duration-200 ease-in-out hover:shadow-xl active:shadow-none animate-scale-up-center"
       @click="onImageClick"
   >
     <div class="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-10"></div>
@@ -59,7 +59,7 @@ onMounted(() => {
       <Trash :size="20" class="text-white" />
     </button>
 
-    <small class="absolute bottom-2 left-2 z-20 text-white text-xxs font-montserrat-medium"
+    <small class="absolute bottom-2 right-2 z-20 text-white text-xxs font-montserrat-medium"
     >Captured at {{ formattedTimestamp }}</small
     >
 
