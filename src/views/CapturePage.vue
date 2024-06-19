@@ -249,35 +249,30 @@ const closeDialog = ()=>{
                     'input-error': emailMeta.validated && !emailMeta.valid,
                     'input-primary': emailMeta.validated && emailMeta.valid
                   }"
-                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-4 focus:outline-none focus:ring-sky-200 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                     placeholder="johndoe@gmail.com" required/>
-              <small v-if="emailMeta.validated && !emailMeta.valid"
-                     class="text-rose-500">{{ emailErrorMessage }}</small>
-            </div>
-            <div class="mb-5">
-              <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
-                Phone number</label>
-              <input type="text" id="phonenumber"
-                     v-model="customerDetails.phoneNo"
-                     :class="{
-                    'input-error': phoneNoMeta.validated && !phoneNoMeta.valid,
-                    'input-primary': phoneNoMeta.validated &&phoneNoMeta.valid
-                  }"
-                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-4 focus:outline-none focus:ring-sky-200 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                     required/>
-              <small v-if="phoneNoMeta.validated && !phoneNoMeta.valid"
-                     class="text-rose-500">{{ phoneNoErrorMessage }}</small>
-            </div>
-            <div class="flex justify-between">
-              <button type="submit"
-                      @click.prevent="onSubmit"
-                      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm md:w-24 px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                Submit
-              </button>
-              <button class="btn btn-active bg-sky-400" @click=" cameraModalIsOpen = ! cameraModalIsOpen">Take a photo
-              </button>
-            </div>
-          </form>
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-4 focus:outline-none focus:ring-sky-200 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                       placeholder="johndoe@gmail.com" required/>
+                <small v-if="emailMeta.validated && !emailMeta.valid"
+                       class="text-rose-500">{{ emailErrorMessage }}</small>
+              </div>
+              <div class="mb-5">
+                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
+                  Phone number</label>
+                <input type="text" id="phone number"
+                       v-model="customerDetails.phoneNo"
+
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-4 focus:outline-none focus:ring-sky-200 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                       required/>
+                <small v-if="phoneNoMeta.validated && !phoneNoMeta.valid"
+                       class="text-rose-500">{{ phoneNoErrorMessage }}</small>
+              </div>
+              <div class="flex justify-between">
+                <button type="submit"
+                        @click.prevent="onSubmit"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm md:w-24 px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  Submit
+                </button>
+              </div>
+            </form>
           </div>
 
         </div>
