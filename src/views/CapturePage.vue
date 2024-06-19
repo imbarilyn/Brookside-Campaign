@@ -125,6 +125,31 @@ const onSubmit = () => {
   if (emailMeta.valid && phoneNoMeta.valid && capturedImages.value.length > 0) {
     campaignStore.openDialogSocial()
     console.log('submitted')
+  }
+  else {
+    notificationStore.addNotification('Please fill all fields', 'warning')
+  }
+}
+const clickCount = ref(0)
+const addMoreSocials = ()=> {
+  if(clickCount.value < 1 && usernameDetail.social1){
+    clickCount.value++
+    toggleUsername.value = true
+    console.log('social1', usernameDetail.social1)
+  }
+  else{
+    console.log("no adding more socials")
+    notificationStore.addNotification('Please fill the above field first', 'warning')
+    console.log(notificationStore.hasNotification)
+    console.log(notificationStore.activeNotification)
+    console.log(notificationStore.getNotification[0])
+  }
+}
+
+const shareToSocials = ()=>{
+  if(usernameDetail.social1 ||  usernameDetail.social2){
+    console.log(usernameDetail)
+    const socialsArray = [usernameDetail.social1, usernameDetail.social2]
     const customerPayload = {
       email: customerDetails.email,
       phoneNo: customerDetails.phoneNo,
