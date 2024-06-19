@@ -123,6 +123,7 @@ const urltoFile = ()=>{
 
 const onSubmit = () => {
   if (emailMeta.valid && phoneNoMeta.valid && capturedImages.value.length > 0) {
+    campaignStore.openDialogSocial()
     console.log('submitted')
     const customerPayload = {
       email: customerDetails.email,
