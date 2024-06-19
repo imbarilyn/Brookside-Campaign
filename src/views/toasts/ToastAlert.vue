@@ -106,8 +106,9 @@ const alertIconName = computed(()=>{
 })
 
 const closeAlert = ()=>{
-  alertToastToggle.value = false
-  useNotifcationStore.removeNotification(props.id)
+  // alertToastToggle.value = false
+  console.log(props.id)
+  notificationStore.removeNotification(props.id)
 }
 
 
