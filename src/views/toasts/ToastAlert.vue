@@ -80,7 +80,7 @@ const alertDashColor = computed(()=>{
     return 'bg-yellow-500'
   }
   else if(props.type === 'error'){
-    return 'bg-re-500'
+    return 'bg-rose-500'
   }
   else if(props.type === 'info'){
     return 'bg-blue-500'
