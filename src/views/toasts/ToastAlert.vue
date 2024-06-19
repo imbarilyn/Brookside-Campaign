@@ -26,7 +26,7 @@ const   alertBgColor = computed(()=>{
     return 'bg-yellow-100'
   }
   else if(props.type === 'error'){
-    return 'bg-re-100'
+    return 'bg-red-100'
   }
   else if(props.type === 'info'){
     return 'bg-blue-100'
@@ -44,7 +44,7 @@ const alertTextColor = computed(()=>{
     return 'text-yellow-500'
   }
   else if(props.type === 'error'){
-    return 'text-re-500'
+    return 'text-red-500'
   }
   else if(props.type === 'info'){
     return 'text-blue-500'
