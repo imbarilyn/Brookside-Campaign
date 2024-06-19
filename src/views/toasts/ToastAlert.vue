@@ -18,7 +18,7 @@ const props = defineProps<NotificationItem>()
 const alertToastToggle = ref(props.isShown)
 
 // backgroundColor
-const alertBgCOlor = computed(()=>{
+const   alertBgColor = computed(()=>{
   if(props.type === 'success'){
     return 'bg-green-100'
   }
