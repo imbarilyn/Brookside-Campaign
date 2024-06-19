@@ -3,7 +3,11 @@ import CapturedImage from "@/views/CapturedImage.vue";
 import CameraModall from "@/views/CameraModall.vue";
 import {reactive, ref, watch} from "vue";
 import {useField} from 'vee-validate'
-import {useCustomerStore} from "@/stores";
+import {useCustomerStore, useNotificationStore, useCampaignStore} from "@/stores";
+import NotificationContainer from "@/views/toasts/NotificationContainer.vue";
+import ToastAlert from "@/views/toasts/ToastAlert.vue";
+import DialogModal from "@/views/modal/DialogModal.vue";
+import { converBase64ToImage } from 'convert-base64-to-image'
 
 export interface CapturedImageItem {
   imgDataUrl: string
