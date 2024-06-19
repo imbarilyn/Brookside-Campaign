@@ -282,5 +282,66 @@ const closeDialog = ()=>{
         />
       </div>
     </div>
+    <teleport to="body">
+      <NotificationContainer v-if="notificationStore.hasNotification">
+        <template v-for="notification in notificationStore.getNotification" :key="notification.id">
+          <ToastAlert
+              v-if="notification.id && notification.isShown"
+              :id="notification.id"
+              :duration="notification.duration"
+              :is-shown="notification.isShown"
+              :message="notification.message"
+              :type="notification.type">
+          </ToastAlert>
+        </template>
+
+      </NotificationContainer>
+
+      <DialogModal :is-open="campaignStore.dialogSocial.isOpen">
+        <template #title>
+          <div class='flex justify-end'>
+            <button class="btn btn-sm bg-sky-200"  @click='addMoreSocials' :disabled="clickCount === 1">
+              <span class="material-icons-outlined">add</span>
+              <span>Add Socials</span>
+            </button>
+
+          </div>
+
+
+        </template>
+        <template #body>
+          <div>
+            <h1 class="text-xl font-semibold">Post to your socials to earn more</h1>
+          </div>
+
+          <div class="space-y-2">
+            <input class="input input-primary w-full border-sky-300 border-2 focus:outline-none focus:ring-4 focus:ring-sky-500"
+                   ref="inputRefs"
+                   placeholder="Add username"
+                   v-model = "usernameDetail.social1"
+            >
+            <input class="input input-primary w-full border-sky-300 border-2 focus:outline-none focus:ring-4 focus:ring-sky-500"
+                   ref="inputRefs"
+                   v-if="toggleUsername"
+                   placeholder="Add username"
+                   v-model="usernameDetail.social2"
+            >
+          </div>
+
+        </template>
+        <template #footer>
+          <div class="flex justify-between">
+            <button class="btn bg-sky-400 hover:bg-sky-200"
+
+                    @click = "shareToSocials">
+              <span class="material-icons-outlined">share</span>
+              <span>Share</span>
+            </button>
+            <button class="btn bg-sky-400 hover:bg-sky-200" @click = "closeDialog">close</button>
+          </div>
+
+        </template>
+      </DialogModal>
+    </teleport>
   </div>
 </template>
