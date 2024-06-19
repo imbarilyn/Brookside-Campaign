@@ -200,39 +200,52 @@ const closeDialog = ()=>{
 </script>
 
 <template>
-  <div class="relative min-h-screen w-full flex flex-col ">
-    <div class="flex justify-center pt-10 ">
-
-      <h1 class="md:text-2xl font-bold lg:text-4xl ">BROOKSIDE</h1>
+  <div class="relative min-h-screen w-full flex flex-col">
+    <div class="flex justify-center pt-6 sticky top-0">
+      <h1 class="md:text-2xl font-bold lg:text-4xl">BROOKSIDE</h1>
       <span class="flex items-center text-medium ps-3 md:pt-1  lg:text-2xl lg:pt-2 font-semibold">CAMPAIGN</span>
     </div>
 
     <div class="flex flex-col md:flex-row *:w-full md:px-10 lg:justify-center">
-      <div class=" pt-10 w-full  flex flex-col items-center justify-center">
-        <div class=" w-24 w-42 lg:w-64 lg:h-80 ">
+      <div class="w-full  flex flex-col items-center justify-center">
+        <div class=" w-40 w-42 lg:w-64 lg:h-80 ">
           <img alt="dairy-img" src="../assets/images/dairy.png">
         </div>
         <div class="my-3 flex justify-center w-80">
-          <p class="text-md text-center leading-none lg:pt-12">Win different prizes including Points, Fridges etc by just
+          <p class="text-md text-center leading-none lg:pt-12">Win different prizes including Points, Fridges etc by
+            just
             taking a selfie of yourself with brookside.</p>
         </div>
       </div>
       <div class="flex items-center justify-center">
 
-        <div class="w-full flex flex-col items-center justify-center">
-          <div class="w-[300px] pt-20">
-            <CapturedImage v-for="capturedImage in capturedImages" :key="capturedImage.timestamp"
-                           :img-data-url="capturedImage.imgDataUrl" :timestamp="capturedImage.timestamp"
+        <div class="w-full grid grid-cols-1 max-w-sm">
+          <div class="pt-4 flex justify-center items-center">
+           <div class="border border-gray-400 bg-sky-500 h-56 w-80 rounded-md flex justify-center items-center"
+                v-if="takePhoto"
+           >
+             <div class="h-24 w-24  flex justify-center items-center bg-white rounded-md">
+               <button  @click=" cameraModalIsOpen = ! cameraModalIsOpen">
+                 <span class="material-icons-outlined !text-6xl text-sky-500">photo_camera</span>
+               </button>
+             </div>
+           </div>
+
+            <CapturedImage
+                v-for="capturedImage in capturedImages"
+                :key="capturedImage.timestamp"
+                :img-data-url="capturedImage.imgDataUrl"
+                :timestamp="capturedImage.timestamp"
             />
           </div>
-          <div class="w-full">
-          <form class="max-w-sm mx-3">
-            <div class="mb-5">
-              <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white  ">Your
-                email</label>
-              <input type="email" id="email"
-                     v-model="customerDetails.email"
-                     :class="{
+          <div class="w-full pt-3">
+            <form class="max-w-sm mx-3">
+              <div class="mb-5">
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white  ">Your
+                  email</label>
+                <input type="email" id="email"
+                       v-model="customerDetails.email"
+                       :class="{
                     'input-error': emailMeta.validated && !emailMeta.valid,
                     'input-primary': emailMeta.validated && emailMeta.valid
                   }"
