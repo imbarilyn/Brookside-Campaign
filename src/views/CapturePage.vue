@@ -152,22 +152,49 @@ const shareToSocials = ()=>{
     const socialsArray = [usernameDetail.social1, usernameDetail.social2]
     const customerPayload = {
       email: customerDetails.email,
-      phoneNo: customerDetails.phoneNo,
-      image: capturedImages.value[0].imgDataUrl
+      phone_number: customerDetails.phoneNo,
+      image: urltoFile(),
+      socials: socialsArray
     }
+    console.log(customerPayload.socials)
     customerStore.postCustomerDetails(customerPayload)
         .then((customerDetail: any) => {
-          console.log(customerDetail)
-          alert("Details submitted successfully")
-          window.location.href = '/'
+          if(customerDetail.message){
+            notificationStore.addNotification('Details saved successfully', 'success')
+          }
+          else{
+            notificationStore.addNotification('Error occurred while saving details', 'error')
+          }
         })
         .catch((error: any) => {
           console.log(error)
-          alert("An error occured")
+          // notificationStore.addNotification('Error occurred', 'error')
         })
-  } else {
-    alert("Kindly fill all required details")
   }
+  else {
+    notificationStore.addNotification('Please fill all fields', 'warning')
+  }
+
+  console.log("share")
+}
+
+const closeDialog = ()=>{
+  campaignStore.closeDialogSocial()
+  const customerPayload = {
+    email: customerDetails.email,
+    phone_number: customerDetails.phoneNo,
+    image: urltoFile(),
+    socials: []
+  }
+  customerStore.postCustomerDetails(customerPayload)
+      .then((resp)=>{
+        console.log(resp)
+        notificationStore.addNotification('Details saved successfully', 'success')
+      })
+      .catch((error: any)=>{
+        console.log(error)
+        notificationStore.addNotification('Error occurred', 'error')
+      })
 
 }
 </script>
