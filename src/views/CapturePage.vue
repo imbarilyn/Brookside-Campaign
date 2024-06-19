@@ -13,6 +13,8 @@ export interface CapturedImageItem {
   imgDataUrl: string
   timestamp: number
 }
+const notificationStore = useNotificationStore()
+const campaignStore = useCampaignStore()
 
 const customerStore = useCustomerStore()
 const cameraModalIsOpen = ref(false)
