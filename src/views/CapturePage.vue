@@ -102,6 +102,23 @@ const onCapture = (capturedImageItem: CapturedImageItem) => {
   capturedImages.value.splice(0, 1)
   capturedImages.value.push(capturedImageItem)
   console.log(capturedImages)
+  takePhoto.value = false
+}
+
+const urltoFile = ()=>{
+  const base64 = capturedImages.value[0].imgDataUrl
+  const filename = 'image.jpg'
+  const mimeType = 'image/jpeg'
+  const byteString = atob(base64.split(',')[1])
+  const ab = new ArrayBuffer(byteString.length)
+  const ia = new Uint8Array(ab)
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i)
+  }
+  const newBlob = new Blob([ab], {type: mimeType})
+  const file = new File([newBlob], filename, {type: mimeType})
+  console.log(file)
+  return file
 }
 
 const onSubmit = () => {
