@@ -116,7 +116,7 @@ async function switchCamera() {
 }
 
 async function captureImage() {
-  isCameraModalOpen.value = false
+
   emits('closeModal')
   try {
     if (!cameraFeed.value) return
