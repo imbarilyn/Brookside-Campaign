@@ -1,7 +1,16 @@
 import { defineStore }  from "pinia";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 
 export const  useCampaignStore   =  defineStore('campaignStore', ()=>{
+    const isAppFetching = ref<boolean>(false);
+
+    const getIsAppFetching = computed(()=>isAppFetching.value)
+
+    const setIsAppFetching =(value: boolean) =>{
+        isAppFetching.value = value;
+    }
+
+
     const dialogSocial = ref({
         isOpen: false
     })
@@ -18,6 +27,10 @@ export const  useCampaignStore   =  defineStore('campaignStore', ()=>{
     return {
         dialogSocial,
         openDialogSocial,
-        closeDialogSocial
+        closeDialogSocial,
+        isAppFetching,
+        getIsAppFetching,
+        setIsAppFetching
+
     }
 })
