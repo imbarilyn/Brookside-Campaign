@@ -22,11 +22,11 @@ const router = createRouter({
       name: 'cannot-share',
       component: ()=>import('../views/CannotShareFallback.vue')
     },
-    // {
-    //   path: '/image-capture',
-    //   name: 'image-capture',
-    //   component: ()=>import('../views/CapturePage.vue')
-    // }
+    {
+      path: '/:pathMatch(.*)*',
+      name:'not-found',
+      component: ()=>import('../views/PagenotFound.vue')
+    }
   ]
 })
 
