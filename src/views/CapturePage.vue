@@ -27,24 +27,7 @@ const customerDetails = reactive({
 const takePhoto = ref(true)
 const route = useRouter()
 
-
-const toggleUsername = ref<boolean>(false)
-
-const usernameDetail = reactive({
-  social1: '',
-  social2: '',
-})
-
-
-watch(()=> usernameDetail.social1, (value)=>{
-  usernameDetail.social1 = value
-})
-
-watch(()=> usernameDetail.social2, (value)=>{
-  usernameDetail.social2 = value
-})
-
-
+//email validation
 const emailValidator = (value: string) => {
   if (!value) {
     return 'Email is required'
@@ -59,7 +42,6 @@ const emailValidator = (value: string) => {
   if (value.length > 50) {
     return 'Email must be less than 50 characters'
   }
-
   return true
 }
 
@@ -76,6 +58,7 @@ watch(
     }
 )
 
+// phone number validation
 const phoneNoValidator = (value: string) => {
   if (!value) {
     return 'Phone number is required'
@@ -100,6 +83,7 @@ watch(
     }
 )
 
+// capture image
 const onCapture = (capturedImageItem: CapturedImageItem) => {
   capturedImages.value.splice(0, 1)
   capturedImages.value.push(capturedImageItem)
@@ -107,6 +91,7 @@ const onCapture = (capturedImageItem: CapturedImageItem) => {
   takePhoto.value = false
 }
 
+// conversion of image from base64 to file
 const baseToFile = ()=>{
   const base64 = capturedImages.value[0].imgDataUrl
   const filename = 'image.jpg'
@@ -123,9 +108,9 @@ const baseToFile = ()=>{
   return file
 }
 
+// submit user details
 const onSubmit = () => {
   if (emailMeta.valid && phoneNoMeta.valid && capturedImages.value.length > 0) {
-    //campaignStore.openDialogSocial()
     console.log('submitted')
     const customerPayload = {
       email: customerDetails.email,
@@ -141,101 +126,98 @@ const onSubmit = () => {
           console.log(error)
           notificationStore.addNotification('Error occurred', 'error')
         })
-
   }
   else {
     notificationStore.addNotification('Please fill all fields', 'warning')
   }
 }
-const clickCount = ref(0)
-const addMoreSocials = ()=> {
-  if(clickCount.value < 1 && usernameDetail.social1){
-    clickCount.value++
-    toggleUsername.value = true
-    console.log('social1', usernameDetail.social1)
+
+// close social dialog box
+const closeSocialsDialog = ()=>{
+  campaignStore.closeDialogSocial()
+  window.location.href = '/'
+}
+const socialUsername = ref('')
+
+//social username validation
+const socialUsernameValidator = (value: string)=>{
+  if(!value){
+    return 'Username is required'
+  }
+  if(value.length > 50){
+    return 'Username must be less than 50 characters'
+  }
+  if(value.length < 3){
+    return 'Username must be more than 3 characters'
+  }
+  return true
+}
+
+const {
+  value: userName,
+  meta: socialUsernameMeta,
+  errorMessage: socialUsernameErrorMessage,
+} = useField('socialUsername', socialUsernameValidator)
+
+watch(()=>socialUsername.value, (value)=>{
+  userName.value = value
+})
+
+const isShare = ref(false)
+const social = ref('')
+
+// change social media name and isShare state
+const shareMedia=(value:string) =>{
+  console.log(value);
+  isShare.value = true
+  social.value = value
+}
+
+// share with Web Share API
+const shareButton = async() =>{
+  if(userName.value){
+    console.log(social.value)
+    isShare.value = false
+    const shareData = {
+      files: [baseToFile()]
+    }
+    const isSharable = navigator.canShare(shareData)
+    if(!isSharable){
+     await route.push('/cannot-share-fallback')
+    }
+    try{
+      console.log(shareData)
+      await navigator.share(shareData)
+    }
+    catch(error){
+      console.log("Error sharing", error)
+      notificationStore.addNotification('Error occurred while sharing try again', 'error')
+
+    }
   }
   else{
-    console.log("no adding more socials")
-    notificationStore.addNotification('Please fill the above field first', 'warning')
-    console.log(notificationStore.hasNotification)
-    console.log(notificationStore.activeNotification)
-    console.log(notificationStore.getNotification[0])
+    notificationStore.addNotification('Please add your username', 'warning')
   }
-}
-
-const shareToSocials = ()=>{
-  if(usernameDetail.social1 ||  usernameDetail.social2){
-    console.log(usernameDetail)
-    const socialsArray = [usernameDetail.social1, usernameDetail.social2]
-    const customerPayload = {
-      email: customerDetails.email,
-      phoneNo: customerDetails.phoneNo,
-      image: baseToFile(),
-      socials: socialsArray
-    }
-    console.log(customerPayload.socials)
-    customerStore.postCustomerDetails(customerPayload)
-        .then((customerDetail: any) => {
-          if(customerDetail.message){
-            notificationStore.addNotification('Details saved successfully', 'success')
-          }
-          else{
-            notificationStore.addNotification('Error occurred while saving details', 'error')
-          }
-        })
-        .catch((error: any) => {
-          console.log(error)
-          // notificationStore.addNotification('Error occurred', 'error')
-        })
-  }
-  else {
-    notificationStore.addNotification('Please fill all fields', 'warning')
-  }
-
-  console.log("share")
-}
-
-const closeDialog = ()=>{
-  campaignStore.closeDialogSocial()
-  const customerPayload = {
-    email: customerDetails.email,
-    phone_number: customerDetails.phoneNo,
-    image: urltoFile(),
-    socials: []
-  }
-  customerStore.postCustomerDetails(customerPayload)
-      .then((resp)=>{
-        console.log(resp)
-        notificationStore.addNotification('Details saved successfully', 'success')
-      })
-      .catch((error: any)=>{
-        console.log(error)
-        notificationStore.addNotification('Error occurred', 'error')
-      })
-
 }
 </script>
 
 <template>
-  <div class="relative min-h-screen w-full flex flex-col">
-    <div class="flex justify-center pt-6 sticky top-0">
-      <h1 class="md:text-2xl font-bold lg:text-4xl">BROOKSIDE</h1>
+  <div class="w-full flex flex-col">
+    <div class="flex justify-center pt-4 sticky top-0 ">
+      <h1 class="md:text-2xl font-bold lg:text-4xl">MIADI</h1>
       <span class="flex items-center text-medium ps-3 md:pt-1  lg:text-2xl lg:pt-2 font-semibold">CAMPAIGN</span>
     </div>
 
-    <div class="flex flex-col md:flex-row *:w-full md:px-10 lg:justify-center">
+    <div class="flex flex-col md:flex-row *:w-full md:px-2 lg:justify-center items-center">
       <div class="w-full  flex flex-col items-center justify-center">
-        <div class=" w-40 w-42 lg:w-64 lg:h-80 ">
-          <img alt="dairy-img" src="../assets/images/dairy.png">
-        </div>
-        <div class="my-3 flex justify-center w-80">
-          <p class="text-md text-center leading-none lg:pt-12">Win different prizes including Points, Fridges etc by
+          <img alt="miadi_product" src="../assets/images/Miadi.png">
+        <div class="flex justify-center w-80">
+          <p class="text-normal text-center lg:pt-4 lg:text-xl">Win different prizes including Points, Fridges etc by
             just
-            taking a selfie of yourself with brookside.</p>
+            taking a selfie of yourself with Miadi products.</p>
         </div>
       </div>
       <div class="flex items-center justify-center">
-
         <div class="w-full grid grid-cols-1 max-w-sm">
           <div class="pt-4 flex justify-center items-center">
            <div class="border border-gray-400 bg-sky-500 h-56 w-80 rounded-md flex justify-center items-center"
@@ -255,8 +237,8 @@ const closeDialog = ()=>{
                 :timestamp="capturedImage.timestamp"
             />
           </div>
-          <div class="w-full pt-3">
-            <form class="max-w-sm mx-3">
+          <div class="w-full pt-3 pb-2">
+            <form class="max-w-sm mx-3 ">
               <div class="mb-5">
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white  ">Your
                   email</label>
@@ -282,12 +264,20 @@ const closeDialog = ()=>{
                 <small v-if="phoneNoMeta.validated && !phoneNoMeta.valid"
                        class="text-rose-500">{{ phoneNoErrorMessage }}</small>
               </div>
-              <div class="flex justify-between">
+              <div>
+                <button
+                    v-if="campaignStore.isAppFetching"
+                    class="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  <span class="loading loading-spinner loading-md"></span>
+                </button>
                 <button type="submit"
+                        v-else
                         @click.prevent="onSubmit"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm md:w-24 px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        class="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                   Submit
                 </button>
+
+
               </div>
             </form>
           </div>
@@ -316,47 +306,63 @@ const closeDialog = ()=>{
 
       <DialogModal :is-open="campaignStore.dialogSocial.isOpen">
         <template #title>
-          <div class='flex justify-end'>
-            <button class="btn btn-sm bg-sky-200"  @click='addMoreSocials' :disabled="clickCount === 1">
-              <span class="material-icons-outlined">add</span>
-              <span>Add Socials</span>
+          <div class="w-full flex justify-end">
+            <button class="btn btn-sm btn-circle"
+                    @click="closeSocialsDialog"
+            >
+              <span class="material-icons-outlined">close</span>
             </button>
-
           </div>
-
-
+          <div>
+            <h1 class="text-xl font-semibold">Share to earn more</h1>
+          </div>
         </template>
         <template #body>
-          <div>
-            <h1 class="text-xl font-semibold">Post to your socials to earn more</h1>
-          </div>
-
-          <div class="space-y-2">
-            <input class="input input-primary w-full border-sky-300 border-2 focus:outline-none focus:ring-4 focus:ring-sky-500"
-                   ref="inputRefs"
-                   placeholder="Add username"
-                   v-model = "usernameDetail.social1"
-            >
-            <input class="input input-primary w-full border-sky-300 border-2 focus:outline-none focus:ring-4 focus:ring-sky-500"
-                   ref="inputRefs"
-                   v-if="toggleUsername"
-                   placeholder="Add username"
-                   v-model="usernameDetail.social2"
-            >
+          <div  class="flex space-x-5 justify-center items-center h-24">
+            <button
+                @click ="shareMedia('Facebook')"
+                :disabled="isShare"
+                class="bg-blue-900 btn-circle flex items-center justify-center text-white">
+              <Facebook
+                  stroke-width="2"
+                  :size="32"
+              />
+            </button>
+            <button
+                @click="shareMedia('Twitter')"
+                class="bg-sky-400 btn-circle flex items-center justify-center text-white">
+              <Twitter :size='32' />
+            </button>
+            <button
+                @click ="shareMedia('Instagram')"
+                class="bg-red-600 btn-circle flex items-center justify-center text-white">
+              <Instagram  :size="32"/>
+            </button>
           </div>
 
         </template>
-        <template #footer>
-          <div class="flex justify-between">
-            <button class="btn bg-sky-400 hover:bg-sky-200"
-
-                    @click = "shareToSocials">
-              <span class="material-icons-outlined">share</span>
-              <span>Share</span>
-            </button>
-            <button class="btn bg-sky-400 hover:bg-sky-200" @click = "closeDialog">close</button>
+        <template #footer v-if="isShare">
+          <div>
+            <p class="text-medium pb-2">Kindly share your {{social}} username</p>
+            <div class="relative">
+              <div class="absolute inset-y-0 end-3 flex items-center">
+                <button
+                    @click="shareButton"
+                    class="bg-sky-400 text-sm rounded-full px-4 py-2">Share</button>
+              </div>
+              <input
+                  class="input input-primary w-full"
+                  type="text"
+                  v-model="socialUsername"
+                  placeholder="Enter username"
+                  :class="{
+                  'input-error': socialUsernameMeta.validated && !socialUsernameMeta.valid,
+                  'input-primary': socialUsernameMeta.validated && socialUsernameMeta.valid
+                }"
+              >
+            </div>
+            <small v-if="socialUsernameMeta.validated && !socialUsernameMeta.valid" class="text-rose-500">{{socialUsernameErrorMessage}}</small>
           </div>
-
         </template>
       </DialogModal>
     </teleport>
