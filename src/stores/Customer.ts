@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
-import { useNotificationStore} from "@/stores";
 
-const notification = useNotificationStore()
+import { useCampaignStore, useNotificationStore} from "@/stores";
+
+
+
 
 export const useCustomerStore = defineStore('customerStore', () => {
 
@@ -29,17 +31,6 @@ export const useCustomerStore = defineStore('customerStore', () => {
                 mode: 'cors'
             })
             const resp = await response.json()
-            // console.log(resp)
-            // if(resp.message){
-            //     // notification.addNotification('Details saved successfully', 'success')
-            //     console.log(resp)
-            //     return resp
-            // }
-            // else{
-            //     console.log(resp)
-            //     return resp
-            //     // notification.addNotification('Error occurred while saving details', 'error')
-            // }
             return resp
 
 
@@ -56,7 +47,38 @@ export const useCustomerStore = defineStore('customerStore', () => {
         }
     }
 
+    async function postUserName (userName: any){
+        const useNotification = useNotificationStore()
+        const campaignStore = useCampaignStore()
+
+        campaignStore.setIsAppFetching(true)
+
+        try{
+            const response = await fetch('', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userName),
+                mode: 'cors'
+            })
+            const resp = await response.json()
+            return resp
+        }
+        catch(error){
+            console.log(error)
+        }
+        finally{
+            setTimeout(()=>{
+                campaignStore.setIsAppFetching(false)
+                window.location.href ='/'
+            }, 500)
+        }
+    }
+
     return {
-        postCustomerDetails
+        postCustomerDetails,
+        postUserName
+
     }
 })
