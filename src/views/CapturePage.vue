@@ -7,7 +7,8 @@ import {useCustomerStore, useNotificationStore, useCampaignStore} from "@/stores
 import NotificationContainer from "@/views/toasts/NotificationContainer.vue";
 import ToastAlert from "@/views/toasts/ToastAlert.vue";
 import DialogModal from "@/views/modal/DialogModal.vue";
-import { converBase64ToImage } from 'convert-base64-to-image'
+import { Facebook, Twitter, Instagram} from 'lucide-vue-next'
+import {useRouter} from "vue-router";
 
 export interface CapturedImageItem {
   imgDataUrl: string
