@@ -18,9 +18,9 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
-      path: '/customer-details',
-      name: 'customer-details',
-      component: ()=>import('../views/DetailsPage.vue')
+      path: '/cannot-share-fallback',
+      name: 'cannot-share',
+      component: ()=>import('../views/CannotShareFallback.vue')
     },
     // {
     //   path: '/image-capture',
