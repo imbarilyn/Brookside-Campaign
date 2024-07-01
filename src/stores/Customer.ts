@@ -7,18 +7,26 @@ export const useCustomerStore = defineStore('customerStore', () => {
 
 //     actions
     async function postCustomerDetails(customerDetails: any) {
-        const formData = new FormData()
-        formData.append('image', customerDetails.image)
-        formData.append('email', customerDetails.email)
-        formData.append('phone_number', customerDetails.phone_number)
-        formData.append('socials', customerDetails.socials)
-        console.log(formData.get('socials'))
+        // const formData = new FormData()
+        // formData.append('image', customerDetails.image)
+        // formData.append('email', customerDetails.email)
+        // formData.append('phoneNo', customerDetails.phone_number)
+        // // formData.append('socials', customerDetails.socials)
+        // // console.log(formData.get('socials'))
+        // console.log(formData)
+        const campaignStore = useCampaignStore()
+        console.log(customerDetails)
+        campaignStore.setIsAppFetching(true)
 
 
         try {
-            const response = await fetch('https://f2ee-105-163-158-195.ngrok-free.app/campaigns/analyze_data', {
+            const response = await fetch('https://bots-api.mzawadi.com/api/campaigns', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(customerDetails),
+                mode: 'cors'
             })
             const resp = await response.json()
             // console.log(resp)
@@ -42,7 +50,8 @@ export const useCustomerStore = defineStore('customerStore', () => {
         finally {
             console.log('done')
             setTimeout(()=>{
-                // window.location.href = "/"
+                campaignStore.openDialogSocial()
+                campaignStore.setIsAppFetching(false)
             }, 1000)
         }
     }

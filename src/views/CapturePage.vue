@@ -169,8 +169,8 @@ const shareToSocials = ()=>{
     const socialsArray = [usernameDetail.social1, usernameDetail.social2]
     const customerPayload = {
       email: customerDetails.email,
-      phone_number: customerDetails.phoneNo,
-      image: urltoFile(),
+      phoneNo: customerDetails.phoneNo,
+      image: baseToFile(),
       socials: socialsArray
     }
     console.log(customerPayload.socials)
