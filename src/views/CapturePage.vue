@@ -25,6 +25,7 @@ const customerDetails = reactive({
   phoneNo: ''
 })
 const takePhoto = ref(true)
+const route = useRouter()
 
 
 const toggleUsername = ref<boolean>(false)
