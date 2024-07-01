@@ -107,7 +107,7 @@ const onCapture = (capturedImageItem: CapturedImageItem) => {
   takePhoto.value = false
 }
 
-const urltoFile = ()=>{
+const baseToFile = ()=>{
   const base64 = capturedImages.value[0].imgDataUrl
   const filename = 'image.jpg'
   const mimeType = 'image/jpeg'
@@ -125,8 +125,23 @@ const urltoFile = ()=>{
 
 const onSubmit = () => {
   if (emailMeta.valid && phoneNoMeta.valid && capturedImages.value.length > 0) {
-    campaignStore.openDialogSocial()
+    //campaignStore.openDialogSocial()
     console.log('submitted')
+    const customerPayload = {
+      email: customerDetails.email,
+      phoneNo: customerDetails.phoneNo,
+      image: capturedImages.value[0].imgDataUrl
+    }
+    customerStore.postCustomerDetails(customerPayload)
+        .then((resp)=>{
+          console.log(resp)
+          notificationStore.addNotification('Details saved successfully', 'success')
+        })
+        .catch((error: any)=>{
+          console.log(error)
+          notificationStore.addNotification('Error occurred', 'error')
+        })
+
   }
   else {
     notificationStore.addNotification('Please fill all fields', 'warning')
