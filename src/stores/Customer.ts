@@ -1,33 +1,34 @@
 import { defineStore } from 'pinia'
 
 import { useCampaignStore, useNotificationStore} from "@/stores";
+import {computed, ref} from "vue";
 
 
 
 
 export const useCustomerStore = defineStore('customerStore', () => {
 
+//     setters
+    const blur = ref<boolean>(false)
+    const isBlur = computed(()=>blur.value)
+
+
 //     actions
     async function postCustomerDetails(customerDetails: any) {
-        // const formData = new FormData()
-        // formData.append('image', customerDetails.image)
-        // formData.append('email', customerDetails.email)
-        // formData.append('phoneNo', customerDetails.phone_number)
-        // // formData.append('socials', customerDetails.socials)
-        // // console.log(formData.get('socials'))
-        // console.log(formData)
+     const formData = new FormData()
+        formData.append('email', customerDetails.email)
+        formData.append('phone_number', customerDetails.phone_number)
+        formData.append('image', customerDetails.image)
+
         const campaignStore = useCampaignStore()
         console.log(customerDetails)
         campaignStore.setIsAppFetching(true)
 
 
         try {
-            const response = await fetch('https://bots-api.mzawadi.com/api/campaigns', {
+            const response = await fetch('https://saccoaiapi.mzawadi.com/campaigns/analyze_data', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(customerDetails),
+                body: formData,
                 mode: 'cors'
             })
             const resp = await response.json()
@@ -41,9 +42,12 @@ export const useCustomerStore = defineStore('customerStore', () => {
         finally {
             console.log('done')
             setTimeout(()=>{
-                campaignStore.openDialogSocial()
                 campaignStore.setIsAppFetching(false)
-            }, 1000)
+
+
+                // campaignStore.openDialogSocial()
+                window.location.href= '/'
+            }, 5000)
         }
     }
 
@@ -78,7 +82,8 @@ export const useCustomerStore = defineStore('customerStore', () => {
 
     return {
         postCustomerDetails,
-        postUserName
+        postUserName,
+        isBlur
 
     }
 })
