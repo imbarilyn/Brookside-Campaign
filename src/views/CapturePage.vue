@@ -114,8 +114,8 @@ const onSubmit = () => {
     console.log('submitted')
     const customerPayload = {
       email: customerDetails.email,
-      phoneNo: customerDetails.phoneNo,
-      image: capturedImages.value[0].imgDataUrl
+      phone_number: customerDetails.phoneNo,
+      image: baseToFile()
     }
     customerStore.postCustomerDetails(customerPayload)
         .then((resp)=>{
@@ -199,28 +199,28 @@ const shareButton = async() =>{
     notificationStore.addNotification('Please add your username', 'warning')
   }
 }
+
 </script>
 
 <template>
   <div class="w-full flex flex-col">
-    <div class="flex justify-center pt-4 sticky top-0 ">
-      <h1 class="md:text-2xl font-bold lg:text-4xl">MIADI</h1>
+    <div class="flex justify-center  sticky top-0 bg-white">
+      <h1 class="md:text-2xl font-bold lg:text-4xl">BEIERSDORF</h1>
       <span class="flex items-center text-medium ps-3 md:pt-1  lg:text-2xl lg:pt-2 font-semibold">CAMPAIGN</span>
     </div>
-
-    <div class="flex flex-col md:flex-row *:w-full md:px-2 lg:justify-center items-center">
+    <div class="flex flex-col pt-6 md:flex-row *:w-full md:px-2 lg:justify-center justify-center h-screen">
       <div class="w-full  flex flex-col items-center justify-center">
-          <img alt="miadi_product" src="../assets/images/Miadi.png">
-        <div class="flex justify-center w-80">
-          <p class="text-normal text-center lg:pt-4 lg:text-xl">Win different prizes including Points, Fridges etc by
+          <img id='myImage' alt="Beiersdorf_product" src="../assets/images/unilever.png" class="w-48 lg:w-80">
+        <div class="flex justify-center w-80 lg:w-88">
+          <p class="text-normal text-center lg:text-lg">Win different prizes including Points, Fridges etc by
             just
-            taking a selfie of yourself with Miadi products.</p>
+            taking a selfie of yourself with <span class="font-bold text-lg">Luminous Antispot.</span></p>
         </div>
       </div>
       <div class="flex items-center justify-center">
         <div class="w-full grid grid-cols-1 max-w-sm">
-          <div class="pt-4 flex justify-center items-center">
-           <div class="border border-gray-400 bg-sky-500 h-56 w-80 rounded-md flex justify-center items-center"
+          <div class="flex justify-center items-center">
+           <div class=" border border-gray-400 bg-sky-500 h-56 w-80 rounded-md flex justify-center items-center"
                 v-if="takePhoto"
            >
              <div class="h-24 w-24  flex justify-center items-center bg-white rounded-md">
@@ -253,7 +253,7 @@ const shareButton = async() =>{
                 <small v-if="emailMeta.validated && !emailMeta.valid"
                        class="text-rose-500">{{ emailErrorMessage }}</small>
               </div>
-              <div class="mb-5">
+              <div class="mb-4">
                 <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
                   Phone number</label>
                 <input type="text" id="phone number"
@@ -264,7 +264,7 @@ const shareButton = async() =>{
                 <small v-if="phoneNoMeta.validated && !phoneNoMeta.valid"
                        class="text-rose-500">{{ phoneNoErrorMessage }}</small>
               </div>
-              <div>
+              <div class="mb-5">
                 <button
                     v-if="campaignStore.isAppFetching"
                     class="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -276,12 +276,9 @@ const shareButton = async() =>{
                         class="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                   Submit
                 </button>
-
-
               </div>
             </form>
           </div>
-
         </div>
         <CameraModall :is-open="cameraModalIsOpen" :img-count="capturedImages.length"
                       @close-modal="cameraModalIsOpen = false" @capture-image="onCapture"
@@ -341,8 +338,8 @@ const shareButton = async() =>{
           </div>
 
         </template>
-        <template #footer v-if="isShare">
-          <div>
+        <template #footer>
+          <div v-if="isShare">
             <p class="text-medium pb-2">Kindly share your {{social}} username</p>
             <div class="relative">
               <div class="absolute inset-y-0 end-3 flex items-center">
@@ -362,6 +359,10 @@ const shareButton = async() =>{
               >
             </div>
             <small v-if="socialUsernameMeta.validated && !socialUsernameMeta.valid" class="text-rose-500">{{socialUsernameErrorMessage}}</small>
+          </div>
+          <div v-else>
+            <p class="text-neutral-500">Click one of the above socials to proceed</p>
+
           </div>
         </template>
       </DialogModal>
