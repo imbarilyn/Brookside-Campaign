@@ -32,6 +32,7 @@ export const useCustomerStore = defineStore('customerStore', () => {
                 mode: 'cors'
             })
             const resp = await response.json()
+            console.log(resp)
             return resp
 
 
@@ -43,30 +44,31 @@ export const useCustomerStore = defineStore('customerStore', () => {
             console.log('done')
             setTimeout(()=>{
                 campaignStore.setIsAppFetching(false)
-
-
-                // campaignStore.openDialogSocial()
-                window.location.href= '/'
-            }, 5000)
+                campaignStore.openDialogSocial()
+                // window.location.href= '/'
+            }, 1000)
         }
     }
 
     async function postUserName (userName: any){
         const useNotification = useNotificationStore()
         const campaignStore = useCampaignStore()
+        console.log(userName)
 
-        campaignStore.setIsAppFetching(true)
+        const formData = new FormData()
+        formData.append('username', userName.username)
+        formData.append('socials', userName.socials)
+        formData.append('unique_id', userName.unique_id)
+        console.log(formData)
 
         try{
-            const response = await fetch('', {
+            const response = await fetch('https://saccoaiapi.mzawadi.com/campaigns/store_socails', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userName),
+                body: formData,
                 mode: 'cors'
             })
             const resp = await response.json()
+            console.log(resp)
             return resp
         }
         catch(error){
@@ -74,9 +76,8 @@ export const useCustomerStore = defineStore('customerStore', () => {
         }
         finally{
             setTimeout(()=>{
-                campaignStore.setIsAppFetching(false)
-                window.location.href ='/'
-            }, 500)
+                // window.location.href ='/'
+            }, 1000)
         }
     }
 
