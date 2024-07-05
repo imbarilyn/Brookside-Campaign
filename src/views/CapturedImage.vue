@@ -31,7 +31,7 @@ function closeModal() {
 }
 
 function onDeletionClick() {
-  closeModal()
+  // closeModal()
   emits('deleteImage', props.timestamp)
 }
 
@@ -59,7 +59,7 @@ onMounted(() => {
       <Trash :size="20" class="text-white" />
     </button>
 
-    <small class="absolute bottom-2 right-2 z-20 text-white text-xxs font-montserrat-medium"
+    <small class="absolute bottom-2 left-2 z-20 text-white text-xxs font-montserrat-medium"
     >Captured at {{ formattedTimestamp }}</small
     >
 
