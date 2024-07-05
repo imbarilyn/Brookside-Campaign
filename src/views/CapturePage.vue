@@ -132,7 +132,7 @@ const onSubmit = () => {
         })
         .catch((error: any)=>{
           console.log(error)
-          notificationStore.addNotification('Error occurred', 'error')
+          notificationStore.addNotification('Error occurred try again', 'error')
         })
   }
   else {
@@ -181,27 +181,52 @@ const shareMedia=(value:string) =>{
   social.value = value
 }
 
+async function shareNavigator(){
+  const shareData = {
+    files: [baseToFile()]
+  }
+  const isSharable = navigator.canShare(shareData)
+  if(!isSharable){
+    await route.push('/cannot-share-fallback')
+  }
+  try{
+    console.log(shareData)
+    await navigator.share(shareData)
+  }
+  catch(error){
+    console.log("Error sharing", error)
+    notificationStore.addNotification('Error occurred while sharing try again', 'error')
+
+  }
+}
+
 // share with Web Share API
 const shareButton = async() =>{
   if(userName.value){
     console.log(social.value)
     isShare.value = false
-    const shareData = {
-      files: [baseToFile()]
-    }
-    const isSharable = navigator.canShare(shareData)
-    if(!isSharable){
-     await route.push('/cannot-share-fallback')
-    }
-    try{
-      console.log(shareData)
-      await navigator.share(shareData)
-    }
-    catch(error){
-      console.log("Error sharing", error)
-      notificationStore.addNotification('Error occurred while sharing try again', 'error')
 
+    const socialsPayload = {
+      username: userName.value,
+      socials: social.value,
+      unique_id: uniqueId.value
     }
+    customerStore.postUserName(socialsPayload)
+        .then((resp)=>{
+          try{
+            if(resp.message){
+              shareNavigator()
+            }
+            else{
+              console.log(resp)
+              notificationStore.addNotification('Error occurred while sharing try again', 'error')
+            }
+          }
+          catch(error){
+            console.log("Error sharing", error)
+            notificationStore.addNotification('Error occurred while sharing try again', 'error')
+          }
+        })
   }
   else{
     notificationStore.addNotification('Please add your username', 'warning')
@@ -211,14 +236,20 @@ const shareButton = async() =>{
 </script>
 
 <template>
-  <div class="w-full flex flex-col">
-    <div class="flex justify-center  sticky top-0 bg-white">
-      <h1 class="md:text-2xl font-bold lg:text-4xl">BEIERSDORF</h1>
-      <span class="flex items-center text-medium ps-3 md:pt-1  lg:text-2xl lg:pt-2 font-semibold">CAMPAIGN</span>
+  <div class="mx-3 mb-2 ">
+  <div class="w-full flex flex-col border border-red-600 rounded-lg ">
+    <div class="flex  flex-row justify-center sticky top-0 bg-red-600 text-white rounded-lg">
+      <div>
+        <img src="../assets/images/mzawadi-logo.jpeg" class="h-14 w-22">
+      </div>
+      <div class="flex justify-center items-center ms-3">
+        <h1 class="md:text-2xl font-bold lg:text-4xl">BEIERSDORF</h1>
+        <span class="flex items-center text-medium ps-1 5 md:pt-1  lg:text-2xl lg:pt-2 font-semibold">CAMPAIGN</span>
+      </div>
     </div>
-    <div class="flex flex-col pt-6 md:flex-row *:w-full md:px-2 lg:justify-center justify-center h-screen">
+    <div class="flex flex-col md:flex-row *:w-full pt-2 h-screen md:px-2 lg:justify-center justify-center">
       <div class="w-full  flex flex-col items-center justify-center">
-          <img id='myImage' alt="Beiersdorf_product" src="../assets/images/unilever.png" class="w-48 lg:w-80">
+          <img id='myImage' alt="Beiersdorf_product" src="../assets/images/unilever.png" class="w-36 lg:w-80">
         <div class="flex justify-center w-80 lg:w-88">
           <p class="text-normal text-center lg:text-lg">Win different prizes including Points, Fridges etc by
             just
@@ -228,13 +259,18 @@ const shareButton = async() =>{
       <div class="flex items-center justify-center">
         <div class="w-full grid grid-cols-1 max-w-sm">
           <div class="flex justify-center items-center">
-           <div class=" border border-gray-400 bg-sky-500 h-56 w-80 rounded-md flex justify-center items-center"
+           <div class=" border border-gray-400 bg-red-500 h-56 w-80 rounded-md flex justify-center items-center"
                 v-if="takePhoto"
            >
-             <div class="h-24 w-24  flex justify-center items-center bg-white rounded-md">
-               <button  @click=" cameraModalIsOpen = ! cameraModalIsOpen">
-                 <span class="material-icons-outlined !text-6xl text-sky-500">photo_camera</span>
-               </button>
+             <div class="h-24 w-24  flex flex-col justify-center items-center bg-white rounded-md">
+               <div class="flex  justify-center items-center pt-2">
+                 <button  @click=" cameraModalIsOpen = ! cameraModalIsOpen">
+                   <span class="material-icons-outlined !text-6xl text-red-500">photo_camera</span>
+                 </button>
+               </div>
+               <div>
+                 <p class="text-sm font-semibold">Take a photo</p>
+               </div>
              </div>
            </div>
 
@@ -243,10 +279,11 @@ const shareButton = async() =>{
                 :key="capturedImage.timestamp"
                 :img-data-url="capturedImage.imgDataUrl"
                 :timestamp="capturedImage.timestamp"
+                @delete-image = "closeSocialsDialog"
             />
           </div>
-          <div class="w-full pt-3 pb-2">
-            <form class="max-w-sm mx-3 ">
+          <div class="w-full pt-3">
+            <form class="max-w-sm mx-3 mb-12">
               <div class="mb-5">
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white  ">Your
                   email</label>
@@ -272,16 +309,16 @@ const shareButton = async() =>{
                 <small v-if="phoneNoMeta.validated && !phoneNoMeta.valid"
                        class="text-rose-500">{{ phoneNoErrorMessage }}</small>
               </div>
-              <div class="mb-5">
+              <div class="">
                 <button
                     v-if="campaignStore.isAppFetching"
-                    class="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    class="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
                   <span class="loading loading-spinner loading-md"></span>
                 </button>
                 <button type="submit"
                         v-else
                         @click.prevent="onSubmit"
-                        class="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        class="text-white w-full bg-red-500 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
                   Submit
                 </button>
               </div>
@@ -353,7 +390,7 @@ const shareButton = async() =>{
               <div class="absolute inset-y-0 end-3 flex items-center">
                 <button
                     @click="shareButton"
-                    class="bg-sky-400 text-sm rounded-full px-4 py-2">Share</button>
+                    class="bg-red-400 text-sm text-white rounded-full px-4 py-2">Share</button>
               </div>
               <input
                   class="input input-primary w-full"
@@ -375,5 +412,6 @@ const shareButton = async() =>{
         </template>
       </DialogModal>
     </teleport>
+  </div>
   </div>
 </template>
