@@ -25,6 +25,7 @@ const customerDetails = reactive({
   phoneNo: ''
 })
 const takePhoto = ref(true)
+const uniqueId = ref<string>()
 const route = useRouter()
 
 //email validation
@@ -119,8 +120,15 @@ const onSubmit = () => {
     }
     customerStore.postCustomerDetails(customerPayload)
         .then((resp)=>{
-          console.log(resp)
-          notificationStore.addNotification('Details saved successfully', 'success')
+          if(resp.message){
+           console.log( resp.data.unique_id)
+            uniqueId.value = resp.data.unique_id
+            notificationStore.addNotification('Details saved successfully', 'success')
+          }
+          else{
+            console.log(resp)
+            notificationStore.addNotification('Error occurred try again', 'error')
+          }
         })
         .catch((error: any)=>{
           console.log(error)
