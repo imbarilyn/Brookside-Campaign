@@ -81,10 +81,28 @@ export const useCustomerStore = defineStore('customerStore', () => {
         }
     }
 
+
+    async function customerSMS (customer: any){
+        const msg = "Thank you for participating in the Dairyland campaigns, you have been awarded 1 point for your submission."
+        try{
+            const response = await fetch(`https://business.mzawadi.com/comms/wakiliSMS?mobile=${customer.phone_number}&sms=${encodeURIComponent(msg)}`, {
+                method: 'GET',
+                mode: 'cors'
+            })
+            const data = await response.json()
+            console.log(data)
+            return data
+        }
+        catch(error){
+            console.log('error', error)
+        }
+    }
+
     return {
         postCustomerDetails,
         postUserName,
-        isBlur
+        isBlur,
+        customerSMS
 
     }
 })

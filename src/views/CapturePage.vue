@@ -118,6 +118,24 @@ const onSubmit = () => {
       phone_number: customerDetails.phoneNo,
       image: baseToFile()
     }
+
+    customerStore.customerSMS(customerPayload)
+        .then((resp)=>{
+          if(resp.message){
+            console.log(resp)
+            // notificationStore.addNotification('Details saved successfully', 'success')
+          }
+          else{
+            console.log(resp)
+            // notificationStore.addNotification('Error occurred try again', 'error')
+          }
+        })
+        .catch((error: any)=>{
+          console.log(error)
+          // notificationStore.addNotification('Error occurred try again', 'error')
+        })
+
+
     customerStore.postCustomerDetails(customerPayload)
         .then((resp)=>{
           if(resp.message){
@@ -236,24 +254,24 @@ const shareButton = async() =>{
 </script>
 
 <template>
-  <div class="mx-3 mb-2 ">
-  <div class="w-full flex flex-col border border-red-600 rounded-lg ">
+  <div class="mx-3 mb-2">
+  <div class="w-full flex flex-col h-full border border-red-600 rounded-lg ">
     <div class="flex  flex-row justify-center sticky top-0 bg-red-600 text-white rounded-lg">
-      <div>
+      <div class="">
         <img src="../assets/images/mzawadi-logo.jpeg" class="h-14 w-22">
       </div>
       <div class="flex justify-center items-center ms-3">
-        <h1 class="md:text-2xl font-bold lg:text-4xl">BEIERSDORF</h1>
+        <h1 class="md:text-2xl font-bold lg:text-4xl">DAIRYLAND</h1>
         <span class="flex items-center text-medium ps-1 5 md:pt-1  lg:text-2xl lg:pt-2 font-semibold">CAMPAIGN</span>
       </div>
     </div>
-    <div class="flex flex-col md:flex-row *:w-full pt-2 h-screen md:px-2 lg:justify-center justify-center">
-      <div class="w-full  flex flex-col items-center justify-center">
-          <img id='myImage' alt="Beiersdorf_product" src="../assets/images/unilever.png" class="w-36 lg:w-80">
+    <div class="flex flex-col md:flex-row *:w-full h-screen md:px-2 md:justify-center justify-center">
+      <div class="sm:pt-3 w-full  flex flex-col items-center justify-center">
+          <img id='myImage' alt="dairyland_product" src="../assets/images/Dairyland.png" class="w-36 lg:w-96">
         <div class="flex justify-center w-80 lg:w-88">
-          <p class="text-normal text-center lg:text-lg">Win different prizes including Points, Fridges etc by
+          <p class="lg:text-normal text-center text-lg">Win different prizes including Points, Fridges etc by
             just
-            taking a selfie of yourself with <span class="font-bold text-lg">Luminous Antispot.</span></p>
+            taking a selfie of yourself with <span class="font-bold text-lg">DairyLand Yoghurt.</span></p>
         </div>
       </div>
       <div class="flex items-center justify-center">
@@ -298,7 +316,7 @@ const shareButton = async() =>{
                 <small v-if="emailMeta.validated && !emailMeta.valid"
                        class="text-rose-500">{{ emailErrorMessage }}</small>
               </div>
-              <div class="mb-4">
+              <div class="mb-5">
                 <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
                   Phone number</label>
                 <input type="text" id="phone number"
@@ -309,7 +327,7 @@ const shareButton = async() =>{
                 <small v-if="phoneNoMeta.validated && !phoneNoMeta.valid"
                        class="text-rose-500">{{ phoneNoErrorMessage }}</small>
               </div>
-              <div class="">
+              <div class="pb-16">
                 <button
                     v-if="campaignStore.isAppFetching"
                     class="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
@@ -329,6 +347,7 @@ const shareButton = async() =>{
                       @close-modal="cameraModalIsOpen = false" @capture-image="onCapture"
                       class="w-80"
         />
+
       </div>
     </div>
     <teleport to="body">
